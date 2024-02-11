@@ -68,6 +68,7 @@ Make sure your `routes/web.php` file doesn't already define the `''` or `'/'` ro
 
 ```php
 use Filament\Panel;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Blade;
 
 public function panel(Panel $panel): Panel
@@ -75,7 +76,7 @@ public function panel(Panel $panel): Panel
     return $panel
         // ...
         ->renderHook(
-            'panels::body.start',
+            PanelsRenderHook::BODY_START,
             fn (): string => Blade::render('@livewire(\'livewire-ui-modal\')'),
         );
 }
@@ -162,6 +163,26 @@ public function panel(Panel $panel): Panel
 ```
 
 > Please note: this feature is not compatible with [SPA mode](#spa-mode).
+
+## Registering assets for a panel
+
+You can register [assets](../support/assets) that will only be loaded on pages within a specific panel, and not in the rest of the app. To do that, pass an array of assets to the `assets()` method:
+
+```php
+use Filament\Panel;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ...
+        ->assets([
+            Css::make('custom-stylesheet', resource_path('css/custom.css')),
+            Js::make('custom-script', resource_path('js/custom.js')),
+        ]);
+}
+```
 
 ## Applying middleware
 
